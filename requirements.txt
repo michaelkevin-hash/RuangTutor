@@ -1,0 +1,13 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-telegram-bot>=21.0
+httpx>=0.27.0
+python-dotenv>=1.0.0
+
+# OCR backends (install at least one)
+# --- Option A: local Tesseract (no cloud cost) ---
+pytesseract>=0.3.10
+Pillow>=10.0.0
+
+# --- Option B: Google Cloud Vision (higher accuracy for handwriting) ---
+# google-cloud-vision>=3.7.0

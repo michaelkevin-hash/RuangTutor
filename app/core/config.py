@@ -24,6 +24,12 @@ class Settings:
     # Alternative: use Tesseract locally
     USE_GOOGLE_VISION: bool = os.getenv("USE_GOOGLE_VISION", "false").lower() == "true"
 
+    # Tesseract binary path (Windows default; override via TESSERACT_CMD in .env)
+    TESSERACT_CMD: str = os.getenv(
+        "TESSERACT_CMD",
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+    )
+
     # Server
     HOST: str = os.getenv("HOST", "0.0.0.0")
     PORT: int = int(os.getenv("PORT", "8000"))

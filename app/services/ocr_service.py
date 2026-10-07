@@ -13,6 +13,13 @@ import io
 import httpx
 from app.core.config import settings
 
+# Configure Tesseract binary path from settings (Windows needs explicit path)
+try:
+    import pytesseract as _pt
+    _pt.pytesseract.tesseract_cmd = settings.TESSERACT_CMD
+except ImportError:
+    pass
+
 
 async def extract_text_from_image_url(image_url: str) -> str:
     """Download a Telegram file URL and run OCR on it."""

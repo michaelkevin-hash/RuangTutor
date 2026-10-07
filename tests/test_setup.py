@@ -88,6 +88,12 @@ print("\n🔤 [3] Tesseract OCR Binary")
 
 try:
     import pytesseract
+
+    # Set explicit path for Windows (from config or well-known default)
+    tess_cmd = os.getenv("TESSERACT_CMD", r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+    if os.path.exists(tess_cmd):
+        pytesseract.pytesseract.tesseract_cmd = tess_cmd
+
     version = pytesseract.get_tesseract_version()
     check("Tesseract binary", True, f"Version {version}")
 
@@ -97,7 +103,7 @@ try:
         "Bahasa Indonesia (ind)",
         has_ind,
         "Tersedia" if has_ind
-        else "Tidak ada. Install dengan: tesseract-ocr-ind (Linux) atau centang 'Indonesian' saat install Windows",
+        else "Tidak ada. Download: https://github.com/tesseract-ocr/tessdata/raw/main/ind.traineddata → simpan ke C:\\Program Files\\Tesseract-OCR\\tessdata\\",
     )
 except Exception as e:
     check("Tesseract binary", False,

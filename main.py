@@ -18,10 +18,12 @@ from fastapi import FastAPI, Request, Response
 from telegram import Update, Bot
 from telegram.ext import (
     Application,
+    ApplicationBuilder,
     CommandHandler,
     MessageHandler,
     filters,
 )
+from telegram.request import HTTPXRequest
 
 from app.core.config import settings
 from app.handlers.telegram_handlers import (
@@ -44,9 +46,17 @@ ptb_app: Application | None = None
 
 
 def _build_ptb_app() -> Application:
+    # Increase timeouts — default 5s often fails on Indonesian networks
+    request = HTTPXRequest(
+        connect_timeout=30.0,
+        read_timeout=30.0,
+        write_timeout=30.0,
+        pool_timeout=30.0,
+    )
     app = (
         Application.builder()
         .token(settings.TELEGRAM_BOT_TOKEN)
+        .request(request)
         .updater(None)          # disable built-in polling; webhook only
         .build()
     )

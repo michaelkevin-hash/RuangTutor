@@ -10,7 +10,7 @@ load_dotenv()
 class Settings:
     # Telegram
     TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
-    WEBHOOK_URL: str = os.getenv("WEBHOOK_URL", "")  # e.g. https://yourdomain.com/webhook
+    WEBHOOK_URL: str = os.getenv("WEBHOOK_URL", "")
 
     # Langflow
     LANGFLOW_API_URL: str = os.getenv(
@@ -19,9 +19,16 @@ class Settings:
     )
     LANGFLOW_API_KEY: str = os.getenv("LANGFLOW_API_KEY", "")
 
+    # Astra DB (for reference / ingest scripts)
+    ASTRA_DB_TOKEN: str = os.getenv("ASTRA_DB_TOKEN", "")
+    ASTRA_DB_ENDPOINT: str = os.getenv("ASTRA_DB_ENDPOINT", "")
+    ASTRA_DB_COLLECTION: str = os.getenv("ASTRA_DB_COLLECTION", "vector_materi_jarkom")
+
+    # Google API Key (Gemini, used by Langflow Agent node)
+    GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY", "")
+
     # Google Vision / OCR (optional – for handwritten homework grading)
     GOOGLE_APPLICATION_CREDENTIALS: str = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "")
-    # Alternative: use Tesseract locally
     USE_GOOGLE_VISION: bool = os.getenv("USE_GOOGLE_VISION", "false").lower() == "true"
 
     # Tesseract binary path (Windows default; override via TESSERACT_CMD in .env)

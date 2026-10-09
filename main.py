@@ -49,7 +49,7 @@ def _build_ptb_app() -> Application:
     # Increase timeouts — default 5s often fails on Indonesian networks
     request = HTTPXRequest(
         connect_timeout=30.0,
-        read_timeout=30.0,
+        read_timeout=120.0,   # Langflow AI needs ~16-20s to respond
         write_timeout=30.0,
         pool_timeout=30.0,
     )

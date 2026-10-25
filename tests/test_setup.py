@@ -38,7 +38,7 @@ print("\n📋 [1] Environment Variables")
 token = os.getenv("TELEGRAM_BOT_TOKEN", "")
 check(
     "TELEGRAM_BOT_TOKEN",
-    bool(token) and token != "***REMOVED***",
+    bool(token) and token != "YOUR_TELEGRAM_BOT_TOKEN_HERE",
     "Token terisi. Ingat: jangan commit token asli ke Git!"
     if token else "Belum diisi di .env",
 )

@@ -11,21 +11,38 @@ import os
 import sys
 import httpx
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env from the project root when the script is run directly.
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-LANGFLOW_BASE = "http://127.0.0.1:7860"
-FLOW_ID = "741990f6-cf6e-4039-bcb6-1bf774dd91d7"
-API_KEY = "***REMOVED***"
+LANGFLOW_BASE = os.getenv("LANGFLOW_BASE_URL", "http://127.0.0.1:7860")
+FLOW_ID = os.getenv("LANGFLOW_FLOW_ID", "741990f6-cf6e-4039-bcb6-1bf774dd91d7")
+API_KEY = os.getenv("LANGFLOW_API_KEY", "").strip()
 
-ASTRA_TOKEN = "***REMOVED***"
-ASTRA_ENDPOINT = "https://7977b6ab-38ac-4425-8825-0e014bddf4ff-us-east-2.apps.astra.datastax.com"
-GOOGLE_API_KEY = "***REMOVED***"
+
+def require_env(name: str) -> str:
+    value = os.getenv(name, "").strip()
+    if not value:
+        raise SystemExit(
+            f"Missing required environment variable: {name}. "
+            "Copy .env.example to .env and fill it in; never commit .env."
+        )
+    return value
+
+
+ASTRA_TOKEN = require_env("ASTRA_DB_TOKEN")
+ASTRA_ENDPOINT = require_env("ASTRA_DB_ENDPOINT")
+GOOGLE_API_KEY = require_env("GOOGLE_API_KEY")
+LANGFLOW_USERNAME = os.getenv("LANGFLOW_USERNAME", "").strip()
+LANGFLOW_PASSWORD = os.getenv("LANGFLOW_PASSWORD", "").strip()
 
 
 async def update_flow_credentials():
-    headers = {"x-api-key": API_KEY}
+    headers = {"x-api-key": API_KEY} if API_KEY else {}
 
     async with httpx.AsyncClient(timeout=30.0, base_url=LANGFLOW_BASE) as client:
         # 1. Cek apakah Langflow hidup
@@ -47,10 +64,16 @@ async def update_flow_credentials():
             r = await client.get(f"/api/v1/flows/{FLOW_ID}")
 
         if r.status_code == 401:
-            print("401 Unauthorized - mencoba login...")
+            print("401 Unauthorized - trying login...")
+            if not (LANGFLOW_USERNAME and LANGFLOW_PASSWORD):
+                print(
+                    "Set LANGFLOW_USERNAME and LANGFLOW_PASSWORD in .env, "
+                    "or provide a valid LANGFLOW_API_KEY."
+                )
+                return False
             login_r = await client.post(
                 "/api/v1/login",
-                data={"username": "langflow", "password": "admin"},
+                data={"username": LANGFLOW_USERNAME, "password": LANGFLOW_PASSWORD},
                 headers={"Content-Type": "application/x-www-form-urlencoded"}
             )
             if login_r.status_code == 200:

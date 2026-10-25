@@ -1198,7 +1198,7 @@
                 "title_case": false,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "***REMOVED***"
+                "value": "YOUR_ASTRA_DB_TOKEN"
               },
               "tools_metadata": {
                 "_input_type": "ToolsInput",
